@@ -21,6 +21,7 @@
 
 #include <vector>
 
+#include <oclm/config.hpp>
 #include <oclm/context_properties.hpp>
 #include <oclm/context_info.hpp>
 #include <oclm/platform.hpp>
@@ -126,7 +127,7 @@ namespace oclm
     context create_context(device_type<Type> const & type);
     */
 
-    context create_context(device const & d);
+    context OCLM_EXPORT create_context(device const & d);
 
 }
 

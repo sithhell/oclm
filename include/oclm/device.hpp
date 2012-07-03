@@ -28,21 +28,20 @@ namespace oclm
 {
     struct device;
 
-    std::vector<device> init_devices(cl_platform_id platform_id);
-    device get_device();
-    device create_subdevice(device const & d);
+    std::vector<device> OCLM_EXPORT init_devices(cl_platform_id platform_id);
+    device OCLM_EXPORT get_device();
+    device OCLM_EXPORT create_subdevice(device const & d);
 
     struct device
     {
-        static const device_type<CL_DEVICE_TYPE_ACCELERATOR> accelerator;
-        static const device_type<CL_DEVICE_TYPE_ALL> all;
-        static const device_type<CL_DEVICE_TYPE_CPU> cpu;
+			static OCLM_EXPORT const device_type<CL_DEVICE_TYPE_ACCELERATOR> accelerator;
+			static OCLM_EXPORT const device_type<CL_DEVICE_TYPE_ALL> all;
+			static OCLM_EXPORT const device_type<CL_DEVICE_TYPE_CPU> cpu;
 #ifdef CL_VERSION_1_2
-        static const device_type<CL_DEVICE_TYPE_CUSTOM> custom;
+			static OCLM_EXPORT const device_type<CL_DEVICE_TYPE_CUSTOM> custom;
 #endif
-        static const device_type<CL_DEVICE_TYPE_DEFAULT> default_;
-        static const device_type<CL_DEVICE_TYPE_GPU> gpu;
-
+			static OCLM_EXPORT const device_type<CL_DEVICE_TYPE_DEFAULT> default_;
+			static OCLM_EXPORT const device_type<CL_DEVICE_TYPE_GPU> gpu;
         //FIXME: add reference counting
 
         device() {}
@@ -121,7 +120,6 @@ namespace oclm
     {
         return d1.id_ == d2.id_;
     }
-
 }
 
 #endif

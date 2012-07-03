@@ -11,9 +11,9 @@
 #include <string>
 
 namespace oclm {
-    bool init();
-    bool init(int argc, char ** argv);
-    bool init(std::vector<std::string> const & args);
+    bool OCLM_EXPORT init();
+    bool OCLM_EXPORT init(int argc, char ** argv);
+    bool OCLM_EXPORT init(std::vector<std::string> const & args);
 }
 
 #endif

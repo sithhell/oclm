@@ -15,4 +15,14 @@
 #include <CL/opencl.h>
 #endif // !__APPLE__
 
+#if defined (_WIN32) 
+# if defined(oclm_EXPORTS)
+#   define  OCLM_EXPORT __declspec(dllexport)
+# else
+#   define  OCLM_EXPORT __declspec(dllimport)
+# endif /* oclm_EXPORTS */
+#else /* defined (_WIN32) */
+# define OCLM_EXPORT
+#endif
+
 #endif

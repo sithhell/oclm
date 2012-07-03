@@ -105,8 +105,8 @@ namespace oclm
         return p1.id_ == p2.id_;
     }
 
-    struct platform_manager
-        : boost::noncopyable
+    struct OCLM_EXPORT platform_manager
+        //: boost::noncopyable
     {
 
         platform_manager();

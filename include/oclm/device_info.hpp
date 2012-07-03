@@ -36,11 +36,11 @@ namespace oclm
         : boost::mpl::true_
     {};
 
-    extern const device_info<CL_DEVICE_PROFILE>    device_profile;
-    extern const device_info<CL_DEVICE_VERSION>    device_version;
-    extern const device_info<CL_DEVICE_NAME>       device_name;
-    extern const device_info<CL_DEVICE_VENDOR>     device_vendor;
-    extern const device_info<CL_DEVICE_EXTENSIONS> device_extensions;
+    extern OCLM_EXPORT const device_info<CL_DEVICE_PROFILE>    device_profile;
+    extern OCLM_EXPORT const device_info<CL_DEVICE_VERSION>    device_version;
+    extern OCLM_EXPORT const device_info<CL_DEVICE_NAME>       device_name;
+    extern OCLM_EXPORT const device_info<CL_DEVICE_VENDOR>     device_vendor;
+    extern OCLM_EXPORT const device_info<CL_DEVICE_EXTENSIONS> device_extensions;
 
     template <cl_device_type Type>
     struct device_type

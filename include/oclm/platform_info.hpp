@@ -35,11 +35,11 @@ namespace oclm
         : boost::mpl::true_
     {};
 
-    extern const platform_info<CL_PLATFORM_PROFILE>    platform_profile;
-    extern const platform_info<CL_PLATFORM_VERSION>    platform_version;
-    extern const platform_info<CL_PLATFORM_NAME>       platform_name;
-    extern const platform_info<CL_PLATFORM_VENDOR>     platform_vendor;
-    extern const platform_info<CL_PLATFORM_EXTENSIONS> platform_extensions;
+    extern OCLM_EXPORT const platform_info<CL_PLATFORM_PROFILE>    platform_profile;
+    extern OCLM_EXPORT const platform_info<CL_PLATFORM_VERSION>    platform_version;
+    extern OCLM_EXPORT const platform_info<CL_PLATFORM_NAME>       platform_name;
+    extern OCLM_EXPORT const platform_info<CL_PLATFORM_VENDOR>     platform_vendor;
+    extern OCLM_EXPORT const platform_info<CL_PLATFORM_EXTENSIONS> platform_extensions;
 }
 
 #endif
