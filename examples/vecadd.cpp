@@ -38,7 +38,7 @@ int main()
         // create a command queue with a device type and a platform ... context and
         // platform etc is selected in the background ... this will be managed as
         // global state
-        oclm::command_queue queue(oclm::device::gpu);
+        oclm::command_queue queue(oclm::device::default_);
 
 
         // asynchronously fire the opencl function on the command queue, the
@@ -65,9 +65,55 @@ int main()
             BOOST_ASSERT(i == 3);
         }
     }
+
+    {
+        // Select a kernel
+        oclm::kernel k(p, "vecadd");
+
+        // build a function object out of the kernel
+        oclm::function f = k[oclm::global(80), oclm::local(1)];
+
+        std::vector<int> A(80, 1);
+        std::vector<int> B(80, 2);
+        std::vector<int> C(80, 0);
+        
+        oclm::buffer<int, oclm::policy::input> A_buf(A);
+        oclm::buffer<int, oclm::policy::input> B_buf(B);
+        oclm::buffer<int, oclm::policy::output> C_buf(C);
+
+        // create a command queue with a device type and a platform ... context and
+        // platform etc is selected in the background ... this will be managed as
+        // global state
+        oclm::command_queue queue(oclm::device::default_);
+
+
+        // asynchronously fire the opencl function on the command queue, the
+        // std::vector's will get copied back and forth transparantly, policy classes
+        // to come ...
+        oclm::event e1 = async(queue, f(A_buf, B, C));
+
+        // wait until everything is completed ...
+        //e1.get()
+
+        // sanity check ...
+        BOOST_FOREACH(int i, A)
+        {
+            BOOST_ASSERT(i == 1);
+        }
+
+        BOOST_FOREACH(int i, B)
+        {
+            BOOST_ASSERT(i == 2);
+        }
+
+        BOOST_FOREACH(int i, C)
+        {
+            BOOST_ASSERT(i == 3);
+        }
+    }
     
     {
-        // build a function object out of the kernel
+        // build a function object out of the program
         oclm::function f(p, "vecadd", oclm::global(80), oclm::local(1));
 
         std::vector<int> A(80, 1);
@@ -77,7 +123,7 @@ int main()
         // create a command queue with a device type and a platform ... context and
         // platform etc is selected in the background ... this will be managed as
         // global state
-        oclm::command_queue queue(oclm::device::gpu);
+        oclm::command_queue queue(oclm::device::default_);
 
 
         // asynchronously fire the opencl function on the command queue, the

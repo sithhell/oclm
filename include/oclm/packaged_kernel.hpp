@@ -27,9 +27,9 @@ namespace oclm {
         typedef T1 t1_type;
         typedef T2 t2_type;
 
-        typedef typename result_of::make_buffer<T0>::type buffer0_type;
-        typedef typename result_of::make_buffer<T1>::type buffer1_type;
-        typedef typename result_of::make_buffer<T2>::type buffer2_type;
+        typedef typename make_buffer<T0>::type buffer0_type;
+        typedef typename make_buffer<T1>::type buffer1_type;
+        typedef typename make_buffer<T2>::type buffer2_type;
 
         program p_;
         std::string kernel_name_;
@@ -42,9 +42,9 @@ namespace oclm {
             : p_(p)
             , kernel_name_(kernel_name)
             , ranges_(ranges)
-            , t0_(make_buffer(t0))
-            , t1_(make_buffer(t1))
-            , t2_(make_buffer(t2))
+            , t0_(make_buffer<T0>::call(t0))
+            , t1_(make_buffer<T1>::call(t1))
+            , t2_(make_buffer<T2>::call(t2))
         {}
 
     };

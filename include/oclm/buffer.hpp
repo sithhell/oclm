@@ -30,28 +30,34 @@ namespace oclm {
 
 namespace oclm
 {
-    template <typename Src, typename Enable = void>
-    struct make_buffer_impl
+    namespace policy
+    {
+        struct noop;
+        struct input;
+        struct output;
+        struct io;
+    }
+
+    template <typename Src, typename Policy = policy::io, typename Enable = void>
+    struct make_buffer
     {
         typedef void type;
         static type call(Src);
     };
 
-    namespace result_of
+    template <typename T, typename Policy>
+    struct buffer;
+    
+    template <typename T, typename P1, typename P2>
+    struct make_buffer<buffer<T, P1>, P2>
     {
-        template <typename Src>
-        struct make_buffer
-        {
-            typedef typename make_buffer_impl<Src>::type type;
-        };
-    }
+        typedef buffer<T, P1> type;
 
-    template <typename Src>
-    typename result_of::make_buffer<Src>::type
-    make_buffer(Src & src)
-    {
-        return make_buffer_impl<Src>::call(src);
-    }
+        static type call(buffer<T, P1> &t)
+        {
+            return t;
+        }
+    };
 
     template <typename T, typename Policy>
     struct buffer
@@ -74,12 +80,12 @@ namespace oclm
         explicit buffer(U & u)
         {
             typedef 
-                typename result_of::make_buffer<U>::type
+                typename make_buffer<U, Policy>::type
                 src_buffer_type;
 
             // static_assert(is_convertible<typename src_buffer_type::value_type, value_type>::value, "")
 
-            src_buffer_type src(make_buffer(u));
+            src_buffer_type const src(make_buffer<U, Policy>::call(u));
             (*this) = src;
         }
         
@@ -87,20 +93,24 @@ namespace oclm
         buffer& operator=(U & u)
         {
             typedef 
-                typename result_of::make_buffer<U>::type
+                typename make_buffer<U, Policy>::type
                 src_buffer_type;
 
             // static_assert(is_convertible<typename src_buffer_type::value_type, value_type>::value, "")
 
-            src_buffer_type src(make_buffer(u));
+            src_buffer_type const src(make_buffer<U, Policy>::call(u));
             (*this) = src;
+
+            return *this;
         }
 
         buffer & operator=(buffer const & o)
         {
             data_start = o.data_start;
             data_size = o.data_size;
-            cl_mem mem;
+            mem = o.mem;
+
+            return *this;
         }
 
         void create(command_queue const & queue)
@@ -241,7 +251,7 @@ namespace oclm
             static void create(command_queue const & queue, Buffer & b)
             {
                 cl_int err = CL_SUCCESS;
-                b.mem = clCreateBuffer(queue.ctx_, CL_MEM_READ_WRITE, b.data_size, NULL, &err);
+                b.mem = clCreateBuffer(queue.ctx_, CL_MEM_READ_ONLY, b.data_size, NULL, &err);
                 OCLM_THROW_IF_EXCEPTION(err, "clCreateBuffer");
             }
             template <typename Buffer>
@@ -257,7 +267,7 @@ namespace oclm
             {
                 cl_int err = CL_SUCCESS;
                 cl_event event;
-                err = clEnqueueWriteBuffer(queue.ctx_, b.mem, false, 0, b.data_size , b.data_start, wait_list.size(), &wait_list[0], &event);
+                err = clEnqueueWriteBuffer(queue, b.mem, false, 0, b.data_size , b.data_start, wait_list.size(), &wait_list[0], &event);
                 OCLM_THROW_IF_EXCEPTION(err, "clEnqueueWriteBuffer");
                 events.push_back(event);
             }
@@ -278,7 +288,7 @@ namespace oclm
             static void create(command_queue const & queue, Buffer & b)
             {
                 cl_int err = CL_SUCCESS;
-                b.mem = clCreateBuffer(queue.ctx_, CL_MEM_READ_WRITE, b.data_size, NULL, &err);
+                b.mem = clCreateBuffer(queue.ctx_, CL_MEM_WRITE_ONLY, b.data_size, NULL, &err);
                 OCLM_THROW_IF_EXCEPTION(err, "clCreateBuffer");
             }
             template <typename Buffer>
@@ -309,10 +319,10 @@ namespace oclm
         };
     }
 
-    template <typename T>
-    struct make_buffer_impl<std::vector<T> >
+    template <typename T, typename Policy>
+    struct make_buffer<std::vector<T>, Policy>
     {
-        typedef buffer<T, policy::io> type;
+        typedef buffer<T, Policy> type;
 
         static type call(std::vector<T> &t)
         {

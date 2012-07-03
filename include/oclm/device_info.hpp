@@ -52,8 +52,16 @@ namespace oclm
         >
     {
         template <typename T>
-        bool operator()(T const & d, std::vector<T> &) const
+        bool operator()(T const & d, std::vector<T> & ds) const
         {
+            if(Type == CL_DEVICE_TYPE_ALL)
+            {
+                return true;
+            }
+            if(Type == CL_DEVICE_TYPE_DEFAULT && ds.size() == 0)
+            {
+                return true;
+            }
             return d.get(device_type<Type>()) == Type;
         }
     };
