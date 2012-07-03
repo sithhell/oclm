@@ -1,0 +1,7 @@
+
+oclm -- OpenCl Manager
+
+This library intends to provide an alternative C++ wrapper implementation on top
+of the OpenCL C library bindings.
+
+The goals are ease of use, and a clean, portable API.
