@@ -15,7 +15,7 @@
 namespace oclm {
 
     template <typename Sig>
-    event async(command_queue const & queue, packaged_kernel<Sig> pk)
+    event async(command_queue const & queue, packaged_kernel<Sig> pk, std::vector<event> const & es = std::vector<event>())
     {
         std::size_t length[] = {pk.p_.content_.size()};
         const char* strings[] = {&pk.p_.content_[0]};
@@ -30,10 +30,11 @@ namespace oclm {
         cl_kernel k = clCreateKernel(p, &pk.kernel_name_[0], &err);
         OCLM_THROW_IF_EXCEPTION(err, "clCreateKernel");
 
+        event e(es);
         std::vector<cl_event> events;
 
         pk.t0_.create(queue);
-        pk.t0_.write(queue, events);
+        pk.t0_.write(queue, e, events);
         pk.t1_.create(queue);
         pk.t1_.write(queue, events);
         pk.t2_.create(queue);

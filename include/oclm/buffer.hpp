@@ -8,6 +8,7 @@
 #define OCLM_BUFFER_HPP
 
 #include <oclm/config.hpp>
+
 #include <oclm/event.hpp>
 #include <oclm/command_queue.hpp>
 
