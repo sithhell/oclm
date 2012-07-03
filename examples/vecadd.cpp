@@ -47,7 +47,7 @@ int main()
         oclm::event e1 = async(queue, f(A, B, C));
 
         // wait until everything is completed ...
-        //e1.get()
+        e1.get();
 
         // sanity check ...
         BOOST_FOREACH(int i, A)
@@ -90,10 +90,10 @@ int main()
         // asynchronously fire the opencl function on the command queue, the
         // std::vector's will get copied back and forth transparantly, policy classes
         // to come ...
-        oclm::event e1 = async(queue, f(A_buf, B, C));
+        oclm::event e1 = async(queue, f(A_buf, B_buf, C_buf));
 
         // wait until everything is completed ...
-        //e1.get()
+        e1.get();
 
         // sanity check ...
         BOOST_FOREACH(int i, A)
@@ -132,7 +132,7 @@ int main()
         oclm::event e1 = async(queue, f(A, B, C));
 
         // wait until everything is completed ...
-        //e1.get()
+        e1.get();
 
         // sanity check ...
         BOOST_FOREACH(int i, A)

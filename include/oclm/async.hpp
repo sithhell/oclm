@@ -67,9 +67,9 @@ namespace oclm {
         pk.t1_.read(queue, kernel_event, events);
         pk.t2_.read(queue, kernel_event, events);
 
-        err = clWaitForEvents(events.size(), &events[0]);
+        //err = clWaitForEvents(events.size(), &events[0]);
 
-        return event();
+        return event(events);
     }
 }
 

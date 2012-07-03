@@ -13,8 +13,36 @@
 
 namespace oclm
 {
+    template <int Name, typename T>
+    struct command_queue_info
+        : info<
+            ::cl_command_queue
+          , T
+          , ::clGetCommandQueueInfo
+          , Name
+        >
+    {};
+    
+    template <typename>
+    struct is_command_queue_info
+        : boost::mpl::false_
+    {};
+
+    template <int Name, typename T>
+    struct is_command_queue_info<command_queue_info<Name, T> >
+        : boost::mpl::true_
+    {};
+
     struct command_queue
     {
+        typedef command_queue_info<CL_QUEUE_CONTEXT, cl_context> context_info_type;
+
+        cl_context context_()
+        {
+            return get_info<context_info_type>(cq_);
+        }
+
+
         command_queue()
             : cq_(0)
         {}

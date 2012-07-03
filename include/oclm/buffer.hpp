@@ -8,24 +8,7 @@
 #define OCLM_BUFFER_HPP
 
 #include <oclm/config.hpp>
-
-namespace oclm {
-    struct event
-    {
-        event() {}
-        event(cl_event e)
-            : e_(e)
-        {}
-
-        operator cl_event const &() const
-        {
-            return e_;
-        }
-
-        private:
-            cl_event e_;
-    };
-}
+#include <oclm/event.hpp>
 #include <oclm/command_queue.hpp>
 
 namespace oclm
@@ -66,13 +49,13 @@ namespace oclm
         typedef Policy policy_type;
 
         buffer()
-            : data_start(0)
-            , data_size(0)
+            : data(0)
+            , size(0)
         {}
 
         buffer(buffer const & o)
-            : data_start(o.data_start)
-            , data_size(o.data_size)
+            : data(o.data)
+            , size(o.size)
             , mem(o.mem)
         {}
 
@@ -106,8 +89,8 @@ namespace oclm
 
         buffer & operator=(buffer const & o)
         {
-            data_start = o.data_start;
-            data_size = o.data_size;
+            data = o.data;
+            size = o.size;
             mem = o.mem;
 
             return *this;
@@ -170,8 +153,8 @@ namespace oclm
             Policy::read(queue, *this, wait, events);
         }
 
-        T * data_start;
-        std::size_t data_size;
+        T * data;
+        std::size_t size;
         cl_mem mem;
     };
 
@@ -210,7 +193,7 @@ namespace oclm
             static void create(command_queue const & queue, Buffer & b)
             {
                 cl_int err = CL_SUCCESS;
-                b.mem = clCreateBuffer(queue.ctx_, CL_MEM_READ_WRITE, b.data_size, NULL, &err);
+                b.mem = clCreateBuffer(queue.ctx_, CL_MEM_READ_WRITE, b.size * sizeof(typename Buffer::value_type), NULL, &err);
                 OCLM_THROW_IF_EXCEPTION(err, "clCreateBuffer");
             }
             template <typename Buffer>
@@ -225,7 +208,7 @@ namespace oclm
             {
                 cl_int err = CL_SUCCESS;
                 cl_event event;
-                err = clEnqueueWriteBuffer(queue, b.mem, false, 0, b.data_size , b.data_start, wait_list.size(), &wait_list[0], &event);
+                err = clEnqueueWriteBuffer(queue, b.mem, false, 0, b.size * sizeof(typename Buffer::value_type), b.data, wait_list.size(), &wait_list[0], &event);
                 OCLM_THROW_IF_EXCEPTION(err, "clEnqueueWriteBuffer");
                 events.push_back(event);
             }
@@ -235,7 +218,7 @@ namespace oclm
             {
                 cl_int err = CL_SUCCESS;
                 cl_event event;
-                err = clEnqueueReadBuffer(queue, b.mem, false, 0, b.data_size, b.data_start, wait_list.size(), &wait_list[0], &event);
+                err = clEnqueueReadBuffer(queue, b.mem, false, 0, b.size* sizeof(typename Buffer::value_type), b.data, wait_list.size(), &wait_list[0], &event);
                 OCLM_THROW_IF_EXCEPTION(err, "clEnqueueReadBuffer");
                 events.push_back(event);
             }
@@ -251,7 +234,7 @@ namespace oclm
             static void create(command_queue const & queue, Buffer & b)
             {
                 cl_int err = CL_SUCCESS;
-                b.mem = clCreateBuffer(queue.ctx_, CL_MEM_READ_ONLY, b.data_size, NULL, &err);
+                b.mem = clCreateBuffer(queue.ctx_, CL_MEM_READ_ONLY, b.size* sizeof(typename Buffer::value_type), NULL, &err);
                 OCLM_THROW_IF_EXCEPTION(err, "clCreateBuffer");
             }
             template <typename Buffer>
@@ -267,7 +250,7 @@ namespace oclm
             {
                 cl_int err = CL_SUCCESS;
                 cl_event event;
-                err = clEnqueueWriteBuffer(queue, b.mem, false, 0, b.data_size , b.data_start, wait_list.size(), &wait_list[0], &event);
+                err = clEnqueueWriteBuffer(queue, b.mem, false, 0, b.size* sizeof(typename Buffer::value_type) , b.data, wait_list.size(), &wait_list[0], &event);
                 OCLM_THROW_IF_EXCEPTION(err, "clEnqueueWriteBuffer");
                 events.push_back(event);
             }
@@ -288,7 +271,7 @@ namespace oclm
             static void create(command_queue const & queue, Buffer & b)
             {
                 cl_int err = CL_SUCCESS;
-                b.mem = clCreateBuffer(queue.ctx_, CL_MEM_WRITE_ONLY, b.data_size, NULL, &err);
+                b.mem = clCreateBuffer(queue.ctx_, CL_MEM_WRITE_ONLY, b.size* sizeof(typename Buffer::value_type), NULL, &err);
                 OCLM_THROW_IF_EXCEPTION(err, "clCreateBuffer");
             }
             template <typename Buffer>
@@ -308,7 +291,7 @@ namespace oclm
             {
                 cl_int err = CL_SUCCESS;
                 cl_event event;
-                err = clEnqueueReadBuffer(queue, b.mem, false, 0, b.data_size, b.data_start, wait_list.size(), &wait_list[0], &event);
+                err = clEnqueueReadBuffer(queue, b.mem, false, 0, b.size* sizeof(typename Buffer::value_type), b.data, wait_list.size(), &wait_list[0], &event);
                 OCLM_THROW_IF_EXCEPTION(err, "clEnqueueReadBuffer");
                 events.push_back(event);
             }
@@ -327,8 +310,8 @@ namespace oclm
         static type call(std::vector<T> &t)
         {
             type res;
-            res.data_start = &t[0];
-            res.data_size = t.size() * sizeof(T);
+            res.data = &t[0];
+            res.size = t.size();
             return res;
         }
     };
