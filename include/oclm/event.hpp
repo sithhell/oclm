@@ -57,8 +57,10 @@ namespace oclm {
                 marker = clCreateUserEvent(ctx, &err);
                 OCLM_THROW_IF_EXCEPTION(err, "clCreateUserEvents");
 
+#ifdef CL_VERSION_1_2
                 err = clEnqueueMarkerWithWaitList(command_queue(), e_.size(), &e_[0], &marker);
                 OCLM_THROW_IF_EXCEPTION(err, "clEnqueueMarkerWithWaitList");
+#endif
             }
         }
         
@@ -77,8 +79,10 @@ namespace oclm {
                 marker = clCreateUserEvent(ctx, &err);
                 OCLM_THROW_IF_EXCEPTION(err, "clCreateUserEvents");
 
+#ifdef CL_VERSION_1_2
                 err = clEnqueueMarkerWithWaitList(command_queue(), e_.size(), &e_[0], &marker);
                 OCLM_THROW_IF_EXCEPTION(err, "clEnqueueMarkerWithWaitList");
+#endif
             }
         }
 
