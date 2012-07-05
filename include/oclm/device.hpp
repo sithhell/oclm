@@ -85,6 +85,7 @@ namespace oclm
 #endif
         }
 
+        /// \brief Obtain informations about a device
         template <typename Info>
         typename boost::enable_if<
             typename is_device_info<Info>::type

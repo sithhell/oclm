@@ -38,6 +38,9 @@ namespace oclm
 
     struct platform;
 
+    /// \brief OpenCL platform
+    ///
+    /// Stores an OpenCL platform and all related devices
     struct platform
     {
         platform() : id_(0) {}
@@ -58,6 +61,7 @@ namespace oclm
             return *this;
         }
 
+        /// \brief Obtain informations about a platform
         template <typename Info>
         typename boost::enable_if<
             typename is_platform_info<Info>::type
