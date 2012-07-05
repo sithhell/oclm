@@ -90,7 +90,7 @@ namespace oclm
         {
             return util::safe_bool<platform>()(id_ != 0);
         }
-            
+        
         std::vector<device> devices;
 
         private:

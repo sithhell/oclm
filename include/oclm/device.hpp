@@ -28,7 +28,10 @@ namespace oclm
 {
     struct device;
 
+    /// \brief initialize available devices of a \p platform_id
     std::vector<device> OCLM_EXPORT init_devices(cl_platform_id platform_id);
+
+    /// \brief access default device
     device OCLM_EXPORT get_device();
     device OCLM_EXPORT create_subdevice(device const & d);
 

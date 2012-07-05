@@ -6,3 +6,6 @@
 
 add_executable(catch_platform catch_platform.cpp)
 target_link_libraries(catch_platform oclm)
+
+add_executable(catch_device catch_device.cpp)
+target_link_libraries(catch_device oclm)
