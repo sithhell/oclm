@@ -1,4 +1,9 @@
 
+//  Copyright (c) 2012 Julian Hornich
+//
+//  Distributed under the Boost Software License, Version 1.0. (See accompanying
+//  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
@@ -17,11 +22,9 @@ TEST_CASE( "platform_manager - access platforms", "Access platforms and check fo
 	pIter p1( ++(oclm::get_platforms().begin()) );
 	pIter p2( oclm::get_platforms().begin() );
 
-	while ( i1 != oclm::get_platforms().end() )
+	while ( p1 != oclm::get_platforms().end() )
 	{
 		// std::cout << i1->get( oclm::platform_name ) << " - " << i2->get( oclm::platform_name ) << std::endl;
-		REQUIRE( static_cast< bool >( !( *p1 == *p2 ) ) );
-		++p1;
-		++p2;
+		REQUIRE( static_cast< bool >( !( *(p1++) == *(p2++) ) ) );
 	}
 }

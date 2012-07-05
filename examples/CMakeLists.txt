@@ -6,3 +6,6 @@
 
 add_executable(vecadd vecadd.cpp)
 target_link_libraries(vecadd oclm)
+
+add_executable(printInfos printInfos.cpp)
+target_link_libraries(printInfos oclm)
