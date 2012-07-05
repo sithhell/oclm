@@ -105,6 +105,10 @@ namespace oclm
         return p1.id_ == p2.id_;
     }
 
+    /// \brief OpenCL Platform Manager
+    ///
+    /// This is a static manager for OpenCL platforms, providing a 
+    /// \p default_platform and \p default_device and all available \p platforms
     struct OCLM_EXPORT platform_manager
         //: boost::noncopyable
     {
@@ -118,6 +122,7 @@ namespace oclm
         std::vector<platform> platforms;
     };
 
+    /// \brief Access default platform
     //template <typename T>
     inline platform get_platform()//T const &)
     {
@@ -126,6 +131,7 @@ namespace oclm
         return platform_manager::get().default_platform;
     }
 
+    /// \brief Access vector of avaailable platforms
     //template <typename T>
     inline std::vector<platform> const & get_platforms()//T const &)
     {
