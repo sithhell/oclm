@@ -16,6 +16,7 @@
 #define OCLM_DEBUG_MSG_OFFSET   10
 #define OCLM_DEBUG_MSG_LENGTH   ( OCLM_DEBUG_LENGTH - OCLM_DEBUG_MSG_OFFSET )
 
+// produces nice debug messages with a specified lenght
 #define OCLM_DEBUG( MSG )                                                     \
     {                                                                         \
         std::string message( MSG );                                           \

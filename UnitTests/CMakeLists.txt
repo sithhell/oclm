@@ -9,3 +9,6 @@ target_link_libraries(catch_platform oclm)
 
 add_executable(catch_device catch_device.cpp)
 target_link_libraries(catch_device oclm)
+
+add_executable(catch_program catch_program.cpp)
+target_link_libraries(catch_program oclm)
