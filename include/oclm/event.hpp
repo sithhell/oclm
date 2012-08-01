@@ -66,7 +66,7 @@ namespace oclm {
         }
 
         event(std::vector<event> e)
-            : e_(e.begin(), e.end())
+            : marker(0), e_(e.begin(), e.end())
         {
             if(e.empty()) return;
             if(e.size() == 1)
