@@ -50,11 +50,11 @@ namespace oclm {
             queue
           , k
           , static_cast<cl_uint>(pk.ranges_.global_r.r.dim())
-          , &pk.ranges_.offset_r.r.values[0]
+          , pk.ranges_.offset_r.r.values.empty() ? 0 : &pk.ranges_.offset_r.r.values[0]
           , &pk.ranges_.global_r.r.values[0]
-          , &pk.ranges_.local_r.r.values[0]
+          , pk.ranges_.local_r.r.values.empty() ? 0 : &pk.ranges_.local_r.r.values[0]
           , static_cast<cl_uint>(events.size())
-          , &events[0]
+          , events.empty() ? 0 : &events[0]
           , &kernel_event
         );
         OCLM_THROW_IF_EXCEPTION(err, "clEnqueueNDRangeKernel");
