@@ -31,6 +31,8 @@
 
 #include <CL/cl.h>
 
+#include <oclm/util/warnings_prefix.hpp>
+
 namespace oclm
 {
 
@@ -41,7 +43,7 @@ namespace oclm
     /// \brief OpenCL platform
     ///
     /// Stores an OpenCL platform and all related devices
-    struct platform
+    struct OCLM_EXPORT platform
     {
         platform() : id_(0) {}
 
@@ -94,7 +96,7 @@ namespace oclm
         {
             return util::safe_bool<platform>()(id_ != 0);
         }
-        
+
         std::vector<device> devices;
 
         private:
@@ -111,7 +113,7 @@ namespace oclm
 
     /// \brief OpenCL Platform Manager
     ///
-    /// This is a static manager for OpenCL platforms, providing a 
+    /// This is a static manager for OpenCL platforms, providing a
     /// \p default_platform and \p default_device and all available \p platforms
     struct OCLM_EXPORT platform_manager
         //: boost::noncopyable
@@ -144,5 +146,7 @@ namespace oclm
         return platform_manager::get().platforms;
     }
 }
+
+#include <oclm/util/warnings_suffix.hpp>
 
 #endif

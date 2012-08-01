@@ -49,11 +49,11 @@ namespace oclm {
         err = clEnqueueNDRangeKernel(
             queue
           , k
-          , pk.ranges_.global_r.r.dim()
+          , static_cast<cl_uint>(pk.ranges_.global_r.r.dim())
           , &pk.ranges_.offset_r.r.values[0]
           , &pk.ranges_.global_r.r.values[0]
           , &pk.ranges_.local_r.r.values[0]
-          , events.size()
+          , static_cast<cl_uint>(events.size())
           , &events[0]
           , &kernel_event
         );
@@ -63,7 +63,7 @@ namespace oclm {
             std::vector<cl_event> tmp; std::swap(events, tmp);
         }
 
-        
+
         pk.t0_.read(queue, kernel_event, events);
         pk.t1_.read(queue, kernel_event, events);
         pk.t2_.read(queue, kernel_event, events);
