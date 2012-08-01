@@ -23,9 +23,9 @@ add_definitions(-DOCLM_SOURCE_DIR=\"${OCLM_SOURCE_DIR}\")
 
 find_package(OCLM_OpenCL REQUIRED)
 
-oclm_add_library(${OpenCL_LIBRARY})
-include_directories(${OpenCL_INCLUDE_DIR})
-link_directories(${OpenCL_LIBRARY_DIR})
+oclm_add_library(${OPENCL_LIBRARY})
+include_directories(${OPENCL_INCLUDE_DIR})
+link_directories(${OPENCL_LIBRARY_DIR})
 
 if(UNIX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ansi")

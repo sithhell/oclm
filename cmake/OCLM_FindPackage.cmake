@@ -10,8 +10,10 @@ set(OCLM_FINDPACKAGE_LOADED TRUE)
 include(OCLM_Include)
 oclm_include(ParseArguments)
 
-macro(oclm_find_headers name)
-  if("" STREQUAL "") #NOT ${name}_HEADER_SEARCHED)
+macro(oclm_find_headers _name)
+
+  string(TOUPPER ${_name} name)
+  if(NOT ${name}_HEADER_SEARCHED)
     oclm_debug("find_headers.${name}" "Finding headers for package ${name}.")
 
     oclm_parse_arguments(${name}
@@ -65,7 +67,9 @@ macro(oclm_find_headers name)
   endif()
 endmacro()
 
-macro(oclm_find_package name)
+macro(oclm_find_package _name)
+  string(TOUPPER ${_name} name)
+
   if(${name}_DISABLE)
     oclm_info("find_package.${name}" "Library search disabled by user.")
 
@@ -91,7 +95,7 @@ macro(oclm_find_package name)
     set(${name}_LIBRARY_DIR ${${name}_LIBRARY_DIR} CACHE INTERNAL "${name} library directory.")
     set(${name}_INCLUDE_DIR ${${name}_INCLUDE_DIR} CACHE INTERNAL "${name} include directory.")
   else()
-    if("" STREQUAL "") #NOT ${name}_SEARCHED)
+    if(NOT ${name}_SEARCHED)
       oclm_info("find_package.${name}" "Searching for package ${name}.")
 
       if(NOT ${name}_HEADERS_SEARCHED)
@@ -142,6 +146,10 @@ macro(oclm_find_package name)
       include(FindPackageHandleStandardArgs)
       find_package_handle_standard_args(${name}
         DEFAULT_MSG ${name}_LIBRARY ${name}_INCLUDE_DIR)
+
+      oclm_info("find_package.${name}" "${name}_LIBRARY ${${name}_LIBRARY}.")
+      oclm_info("find_package.${name}" "${name}_LIBRARY_DIR ${${name}_LIBRARY_DIR}.")
+      oclm_info("find_package.${name}" "${name}_INCLUDE_DIR ${${name}_INCLUDE_DIR}.")
 
       if(${name}_FOUND)
         get_filename_component(${name}_ROOT ${${name}_INCLUDE_DIR} PATH)
