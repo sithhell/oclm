@@ -26,7 +26,7 @@
 
 namespace oclm
 {
-    struct device;
+    struct OCLM_EXPORT device;
 
     /// \brief initialize available devices of a \p platform_id
     std::vector<device> OCLM_EXPORT init_devices(cl_platform_id platform_id);
@@ -35,16 +35,16 @@ namespace oclm
     device OCLM_EXPORT get_device();
     device OCLM_EXPORT create_subdevice(device const & d);
 
-    struct device
+    struct OCLM_EXPORT device
     {
-			static OCLM_EXPORT const device_type<CL_DEVICE_TYPE_ACCELERATOR> accelerator;
-			static OCLM_EXPORT const device_type<CL_DEVICE_TYPE_ALL> all;
-			static OCLM_EXPORT const device_type<CL_DEVICE_TYPE_CPU> cpu;
+            static const device_type<CL_DEVICE_TYPE_ACCELERATOR> accelerator;
+            static const device_type<CL_DEVICE_TYPE_ALL> all;
+            static const device_type<CL_DEVICE_TYPE_CPU> cpu;
 #ifdef CL_VERSION_1_2
-			static OCLM_EXPORT const device_type<CL_DEVICE_TYPE_CUSTOM> custom;
+            static const device_type<CL_DEVICE_TYPE_CUSTOM> custom;
 #endif
-			static OCLM_EXPORT const device_type<CL_DEVICE_TYPE_DEFAULT> default_;
-			static OCLM_EXPORT const device_type<CL_DEVICE_TYPE_GPU> gpu;
+            static const device_type<CL_DEVICE_TYPE_DEFAULT> default_;
+            static const device_type<CL_DEVICE_TYPE_GPU> gpu;
         //FIXME: add reference counting
 
         device() {}
@@ -108,7 +108,7 @@ namespace oclm
               , "Template parameter is not a valid device info type"
             );
         }
-        
+
         operator cl_device_id const &() const
         {
             return id_;
