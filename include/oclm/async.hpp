@@ -30,11 +30,16 @@ namespace oclm {
         cl_kernel k = clCreateKernel(p, &pk.kernel_name_[0], &err);
         OCLM_THROW_IF_EXCEPTION(err, "clCreateKernel");
 
-        event e(es);
         std::vector<cl_event> events;
 
         pk.t0_.create(queue);
-        pk.t0_.write(queue, e, events);
+        if (!es.empty()) {
+            event e(es);
+            pk.t0_.write(queue, e, events);
+        }
+        else {
+            pk.t0_.write(queue, events);
+        }
         pk.t1_.create(queue);
         pk.t1_.write(queue, events);
         pk.t2_.create(queue);
