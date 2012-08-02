@@ -9,7 +9,7 @@ endif()
 
 oclm_find_package(OpenCL
   LIBRARIES opencl.lib
-  LIBRARY_PATHS lib/x86_64
+  LIBRARY_PATHS lib/x86_64 lib/x64
   HEADERS CL/opencl.h
-  HEADER_PATHS include)
+  HEADER_PATHS include inc)
 

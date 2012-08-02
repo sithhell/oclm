@@ -47,7 +47,7 @@ namespace oclm
             static const device_type<CL_DEVICE_TYPE_GPU> gpu;
         //FIXME: add reference counting
 
-        device() {}
+        device() : id_(0) {}
 
         explicit device(cl_device_id id)
             : id_(id)

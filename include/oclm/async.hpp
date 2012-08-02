@@ -30,11 +30,16 @@ namespace oclm {
         cl_kernel k = clCreateKernel(p, &pk.kernel_name_[0], &err);
         OCLM_THROW_IF_EXCEPTION(err, "clCreateKernel");
 
-        event e(es);
         std::vector<cl_event> events;
 
         pk.t0_.create(queue);
-        pk.t0_.write(queue, e, events);
+        if (!es.empty()) {
+            event e(es);
+            pk.t0_.write(queue, e, events);
+        }
+        else {
+            pk.t0_.write(queue, events);
+        }
         pk.t1_.create(queue);
         pk.t1_.write(queue, events);
         pk.t2_.create(queue);
@@ -50,11 +55,11 @@ namespace oclm {
             queue
           , k
           , static_cast<cl_uint>(pk.ranges_.global_r.r.dim())
-          , &pk.ranges_.offset_r.r.values[0]
+          , pk.ranges_.offset_r.r.values.empty() ? 0 : &pk.ranges_.offset_r.r.values[0]
           , &pk.ranges_.global_r.r.values[0]
-          , &pk.ranges_.local_r.r.values[0]
+          , pk.ranges_.local_r.r.values.empty() ? 0 : &pk.ranges_.local_r.r.values[0]
           , static_cast<cl_uint>(events.size())
-          , &events[0]
+          , events.empty() ? 0 : &events[0]
           , &kernel_event
         );
         OCLM_THROW_IF_EXCEPTION(err, "clEnqueueNDRangeKernel");
