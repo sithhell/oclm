@@ -31,7 +31,7 @@ namespace oclm
 
     template <typename T, typename Policy>
     struct buffer;
-    
+
     template <typename T, typename P1, typename P2>
     struct make_buffer<buffer<T, P1>, P2>
     {
@@ -63,7 +63,7 @@ namespace oclm
         template <typename U>
         explicit buffer(U & u)
         {
-            typedef 
+            typedef
                 typename make_buffer<U, Policy>::type
                 src_buffer_type;
 
@@ -72,11 +72,11 @@ namespace oclm
             src_buffer_type const src(make_buffer<U, Policy>::call(u));
             (*this) = src;
         }
-        
+
         template <typename U>
         buffer& operator=(U & u)
         {
-            typedef 
+            typedef
                 typename make_buffer<U, Policy>::type
                 src_buffer_type;
 
@@ -104,7 +104,7 @@ namespace oclm
 
         void set_kernel_arg(cl_kernel k, std::size_t idx)
         {
-            Policy::set_kernel_arg(k, idx, *this);
+            Policy::set_kernel_arg(k, static_cast<cl_uint>(idx), *this);
         }
 
         void write(command_queue const & queue)
@@ -125,7 +125,7 @@ namespace oclm
             std::vector<cl_event> tmp;
             write(queue, tmp, events);
         }
-            
+
         void write(command_queue const & queue, std::vector<cl_event> & wait, std::vector<cl_event> &events)
         {
             Policy::write(queue, *this, wait, events);
@@ -148,7 +148,7 @@ namespace oclm
             std::vector<cl_event> tmp;
             read(queue, tmp, events);
         }
-        
+
         void read(command_queue const & queue, std::vector<cl_event> & wait, std::vector<cl_event> &events)
         {
             Policy::read(queue, *this, wait, events);
@@ -178,16 +178,16 @@ namespace oclm
             template <typename Buffer>
             static void write(command_queue const &, Buffer &, std::vector<cl_event> &, std::vector<cl_event> &)
             {}
-            
+
             template <typename Buffer>
             static void read(command_queue const &, Buffer &, std::vector<cl_event> &, std::vector<cl_event> &)
             {}
-            
+
             template <typename Buffer1, typename Buffer2>
             static void copy(command_queue const &, Buffer1 &, Buffer2 &, std::vector<cl_event> &, std::vector<cl_event> &)
             {}
         };
-        
+
         struct io
         {
             template <typename Buffer>
@@ -201,29 +201,36 @@ namespace oclm
             static void set_kernel_arg(cl_kernel k, std::size_t idx, Buffer & b)
             {
                 cl_int err = CL_SUCCESS;
-                err = clSetKernelArg(k, idx, sizeof(cl_mem), &b.mem);
+                err = clSetKernelArg(k, static_cast<cl_uint>(idx)
+                  , static_cast<cl_uint>(sizeof(cl_mem)), &b.mem);
                 OCLM_THROW_IF_EXCEPTION(err, "clSetKernelArg");
             }
             template <typename Buffer>
             static void write(command_queue const & queue, Buffer & b, std::vector<cl_event> & wait_list, std::vector<cl_event> &events)
             {
                 cl_int err = CL_SUCCESS;
-                cl_event event;
-                err = clEnqueueWriteBuffer(queue, b.mem, false, 0, b.size * sizeof(typename Buffer::value_type), b.data, wait_list.size(), &wait_list[0], &event);
+                cl_event event(0);
+                err = clEnqueueWriteBuffer(queue, b.mem, false, 0
+                  , b.size * sizeof(typename Buffer::value_type)
+                  , b.data, static_cast<cl_uint>(wait_list.size())
+                  , wait_list.empty() ? 0 : &wait_list[0], &event);
                 OCLM_THROW_IF_EXCEPTION(err, "clEnqueueWriteBuffer");
                 events.push_back(event);
             }
-            
+
             template <typename Buffer>
             static void read(command_queue const & queue, Buffer & b, std::vector<cl_event> & wait_list, std::vector<cl_event> &events)
             {
                 cl_int err = CL_SUCCESS;
-                cl_event event;
-                err = clEnqueueReadBuffer(queue, b.mem, false, 0, b.size* sizeof(typename Buffer::value_type), b.data, wait_list.size(), &wait_list[0], &event);
+                cl_event event(0);
+                err = clEnqueueReadBuffer(queue, b.mem, false, 0
+                  , b.size* sizeof(typename Buffer::value_type)
+                  , b.data, static_cast<cl_uint>(wait_list.size())
+                  , wait_list.empty() ? 0 : &wait_list[0], &event);
                 OCLM_THROW_IF_EXCEPTION(err, "clEnqueueReadBuffer");
                 events.push_back(event);
             }
-            
+
             template <typename Buffer1, typename Buffer2>
             static void copy(command_queue const & q, Buffer1 & src, Buffer2 & dst, std::vector<cl_event> &, std::vector<cl_event> &)
             {}
@@ -242,7 +249,8 @@ namespace oclm
             static void set_kernel_arg(cl_kernel k, std::size_t idx, Buffer & b)
             {
                 cl_int err = CL_SUCCESS;
-                err = clSetKernelArg(k, idx, sizeof(cl_mem), &b.mem);
+                err = clSetKernelArg(k, static_cast<cl_uint>(idx)
+                  , static_cast<cl_uint>(sizeof(cl_mem)), &b.mem);
                 OCLM_THROW_IF_EXCEPTION(err, "clSetKernelArg");
             }
 
@@ -250,17 +258,20 @@ namespace oclm
             static void write(command_queue const & queue, Buffer & b, std::vector<cl_event> & wait_list, std::vector<cl_event> &events)
             {
                 cl_int err = CL_SUCCESS;
-                cl_event event;
-                err = clEnqueueWriteBuffer(queue, b.mem, false, 0, b.size* sizeof(typename Buffer::value_type) , b.data, wait_list.size(), &wait_list[0], &event);
+                cl_event event(0);
+                err = clEnqueueWriteBuffer(queue, b.mem, false, 0
+                  , b.size* sizeof(typename Buffer::value_type)
+                  , b.data, static_cast<cl_uint>(wait_list.size())
+                  , wait_list.empty() ? 0 : &wait_list[0], &event);
                 OCLM_THROW_IF_EXCEPTION(err, "clEnqueueWriteBuffer");
                 events.push_back(event);
             }
-            
-            
+
+
             template <typename Buffer>
             static void read(command_queue const &, Buffer &, std::vector<cl_event> &, std::vector<cl_event> &)
             {}
-            
+
             template <typename Buffer1, typename Buffer2>
             static void copy(command_queue const &, Buffer1 &, Buffer2 &, std::vector<cl_event> &, std::vector<cl_event> &)
             {}
@@ -279,24 +290,28 @@ namespace oclm
             static void set_kernel_arg(cl_kernel k, std::size_t idx, Buffer & b)
             {
                 cl_int err = CL_SUCCESS;
-                err = clSetKernelArg(k, idx, sizeof(cl_mem), &b.mem);
+                err = clSetKernelArg(k, static_cast<cl_uint>(idx)
+                  , static_cast<cl_uint>(sizeof(cl_mem)), &b.mem);
                 OCLM_THROW_IF_EXCEPTION(err, "clSetKernelArg");
             }
 
             template <typename Buffer>
             static void write(command_queue const &, Buffer &, std::vector<cl_event> &, std::vector<cl_event> &)
             {}
-            
+
             template <typename Buffer>
             static void read(command_queue const & queue, Buffer & b, std::vector<cl_event> & wait_list, std::vector<cl_event> &events)
             {
                 cl_int err = CL_SUCCESS;
-                cl_event event;
-                err = clEnqueueReadBuffer(queue, b.mem, false, 0, b.size* sizeof(typename Buffer::value_type), b.data, wait_list.size(), &wait_list[0], &event);
+                cl_event event(0);
+                err = clEnqueueReadBuffer(queue, b.mem, false, 0
+                  , b.size* sizeof(typename Buffer::value_type)
+                  , b.data, static_cast<cl_uint>(wait_list.size())
+                  , wait_list.empty() ? 0 : &wait_list[0], &event);
                 OCLM_THROW_IF_EXCEPTION(err, "clEnqueueReadBuffer");
                 events.push_back(event);
             }
-            
+
             template <typename Buffer1, typename Buffer2>
             static void copy(command_queue const &, Buffer1 &, Buffer2 &, std::vector<cl_event> &, std::vector<cl_event> &)
             {}

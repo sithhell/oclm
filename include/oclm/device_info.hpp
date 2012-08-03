@@ -25,7 +25,7 @@ namespace oclm
           , Name
         >
     {};
-    
+
     template <typename>
     struct is_device_info
         : boost::mpl::false_
@@ -43,7 +43,7 @@ namespace oclm
     extern OCLM_EXPORT const device_info<CL_DEVICE_EXTENSIONS> device_extensions;
 
     template <cl_device_type Type>
-    struct device_type
+    struct OCLM_EXPORT device_type
         : info<
             ::cl_device_id
           , cl_device_type
@@ -70,7 +70,7 @@ namespace oclm
     struct is_device_info<device_type<Type> >
         : boost::mpl::true_
     {};
-    
+
 }
 
 #endif

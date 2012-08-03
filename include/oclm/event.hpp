@@ -21,7 +21,7 @@ namespace oclm {
           , Name
         >
     {};
-    
+
     template <typename>
     struct is_event_info
         : boost::mpl::false_
@@ -35,15 +35,16 @@ namespace oclm {
     struct event
     {
         event()
+            : marker(0)
         {
         }
 
         event(cl_event e)
             : marker(e)
         {}
-        
+
         event(std::vector<cl_event> e)
-            : e_(e)
+            : marker(0), e_(e)
         {
             if(e.empty()) return;
             if(e.size() == 1)
@@ -58,14 +59,15 @@ namespace oclm {
                 OCLM_THROW_IF_EXCEPTION(err, "clCreateUserEvents");
 
 #ifdef CL_VERSION_1_2
-                err = clEnqueueMarkerWithWaitList(command_queue(), e_.size(), &e_[0], &marker);
+                err = clEnqueueMarkerWithWaitList(command_queue(),
+                    static_cast<cl_uint>(e_.size()), &e_[0], &marker);
                 OCLM_THROW_IF_EXCEPTION(err, "clEnqueueMarkerWithWaitList");
 #endif
             }
         }
-        
+
         event(std::vector<event> e)
-            : e_(e.begin(), e.end())
+            : marker(0), e_(e.begin(), e.end())
         {
             if(e.empty()) return;
             if(e.size() == 1)
@@ -80,7 +82,8 @@ namespace oclm {
                 OCLM_THROW_IF_EXCEPTION(err, "clCreateUserEvents");
 
 #ifdef CL_VERSION_1_2
-                err = clEnqueueMarkerWithWaitList(command_queue(), e_.size(), &e_[0], &marker);
+                err = clEnqueueMarkerWithWaitList(command_queue(),
+                    static_cast<cl_uint>(e_.size()), &e_[0], &marker);
                 OCLM_THROW_IF_EXCEPTION(err, "clEnqueueMarkerWithWaitList");
 #endif
             }
@@ -98,7 +101,7 @@ namespace oclm {
         {
             return marker;
         }
-        
+
         typedef event_info<CL_EVENT_COMMAND_QUEUE, cl_command_queue> command_queue_info_type;
 
         cl_command_queue command_queue()
