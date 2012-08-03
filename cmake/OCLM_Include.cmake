@@ -5,9 +5,9 @@
 
 macro(oclm_include)
   foreach(listfile ${ARGV})
-    string(TOUPPER "oclm_${listfile}_LOADED" detector)
+      string(TOUPPER "OCLM_${listfile}_LOADED" detector)
     if(NOT ${detector})
-      include("oclm_${listfile}")
+        include("OCLM_${listfile}")
     endif()
   endforeach()
 endmacro()

@@ -8,7 +8,7 @@ if(NOT OCLM_FINDPACKAGE_LOADED)
 endif()
 
 oclm_find_package(OpenCL
-  LIBRARIES opencl.lib
+    LIBRARIES opencl.lib cl libcl OpenCL libOpenCL
   LIBRARY_PATHS lib/x86_64 lib/x64
   HEADERS CL/opencl.h
   HEADER_PATHS include inc)
