@@ -72,7 +72,7 @@ oclm_add_library(${BOOST_thread_LIBRARY})
 oclm_add_library(${BOOST_regex_LIBRARY})
 oclm_add_library(${BOOST_system_LIBRARY})
 oclm_add_library(${BOOST_filesystem_LIBRARY})
-oclm_add_library(${BOOST_chrono_LIBRARY})
+# oclm_add_library(${BOOST_chrono_LIBRARY})
 
 # make auto linking to shared libraries work on Windows
 add_definitions(-DBOOST_ALL_DYN_LINK)
