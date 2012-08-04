@@ -49,7 +49,7 @@ namespace oclm {
         pk.t1_.set_kernel_arg(k, 1);
         pk.t2_.set_kernel_arg(k, 2);
 
-        cl_event kernel_event;
+        cl_event kernel_event(0);
 
         err = clEnqueueNDRangeKernel(
             queue
@@ -68,12 +68,9 @@ namespace oclm {
             std::vector<cl_event> tmp; std::swap(events, tmp);
         }
 
-
         pk.t0_.read(queue, kernel_event, events);
         pk.t1_.read(queue, kernel_event, events);
         pk.t2_.read(queue, kernel_event, events);
-
-        //err = clWaitForEvents(events.size(), &events[0]);
 
         return event(events);
     }

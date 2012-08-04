@@ -137,7 +137,7 @@ namespace oclm
             read(queue, tmp);
         }
 
-        void read(command_queue const & queue, event const & e, std::vector<cl_event> & events)
+        void read(command_queue const & queue, cl_event const & e, std::vector<cl_event> & events)
         {
             std::vector<cl_event> tmp(1, e);
             read(queue, tmp, events);
@@ -209,26 +209,26 @@ namespace oclm
             static void write(command_queue const & queue, Buffer & b, std::vector<cl_event> & wait_list, std::vector<cl_event> &events)
             {
                 cl_int err = CL_SUCCESS;
-                cl_event event(0);
+                cl_event e(0);
                 err = clEnqueueWriteBuffer(queue, b.mem, false, 0
                   , b.size * sizeof(typename Buffer::value_type)
                   , b.data, static_cast<cl_uint>(wait_list.size())
-                  , wait_list.empty() ? 0 : &wait_list[0], &event);
+                  , wait_list.empty() ? 0 : &wait_list[0], &e);
                 OCLM_THROW_IF_EXCEPTION(err, "clEnqueueWriteBuffer");
-                events.push_back(event);
+                events.push_back(e);
             }
 
             template <typename Buffer>
             static void read(command_queue const & queue, Buffer & b, std::vector<cl_event> & wait_list, std::vector<cl_event> &events)
             {
                 cl_int err = CL_SUCCESS;
-                cl_event event(0);
+                cl_event e(0);
                 err = clEnqueueReadBuffer(queue, b.mem, false, 0
                   , b.size* sizeof(typename Buffer::value_type)
                   , b.data, static_cast<cl_uint>(wait_list.size())
-                  , wait_list.empty() ? 0 : &wait_list[0], &event);
+                  , wait_list.empty() ? 0 : &wait_list[0], &e);
                 OCLM_THROW_IF_EXCEPTION(err, "clEnqueueReadBuffer");
-                events.push_back(event);
+                events.push_back(e);
             }
 
             template <typename Buffer1, typename Buffer2>
@@ -258,13 +258,13 @@ namespace oclm
             static void write(command_queue const & queue, Buffer & b, std::vector<cl_event> & wait_list, std::vector<cl_event> &events)
             {
                 cl_int err = CL_SUCCESS;
-                cl_event event(0);
+                cl_event e(0);
                 err = clEnqueueWriteBuffer(queue, b.mem, false, 0
                   , b.size* sizeof(typename Buffer::value_type)
                   , b.data, static_cast<cl_uint>(wait_list.size())
-                  , wait_list.empty() ? 0 : &wait_list[0], &event);
+                  , wait_list.empty() ? 0 : &wait_list[0], &e);
                 OCLM_THROW_IF_EXCEPTION(err, "clEnqueueWriteBuffer");
-                events.push_back(event);
+                events.push_back(e);
             }
 
 
@@ -303,13 +303,13 @@ namespace oclm
             static void read(command_queue const & queue, Buffer & b, std::vector<cl_event> & wait_list, std::vector<cl_event> &events)
             {
                 cl_int err = CL_SUCCESS;
-                cl_event event(0);
+                cl_event e(0);
                 err = clEnqueueReadBuffer(queue, b.mem, false, 0
                   , b.size* sizeof(typename Buffer::value_type)
                   , b.data, static_cast<cl_uint>(wait_list.size())
-                  , wait_list.empty() ? 0 : &wait_list[0], &event);
+                  , wait_list.empty() ? 0 : &wait_list[0], &e);
                 OCLM_THROW_IF_EXCEPTION(err, "clEnqueueReadBuffer");
-                events.push_back(event);
+                events.push_back(e);
             }
 
             template <typename Buffer1, typename Buffer2>

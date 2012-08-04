@@ -35,82 +35,65 @@ namespace oclm {
     struct event
     {
         event()
-            : marker(0)
         {
         }
 
         event(cl_event e)
-            : marker(e)
+            : e_(1, e)
         {}
 
         event(std::vector<cl_event> e)
-            : marker(0), e_(e)
+            : e_(e)
         {
-            if(e.empty()) return;
-            if(e.size() == 1)
-            {
-                marker = e_[0];
-            }
-            else
-            {
-                cl_int err = CL_SUCCESS;
-                cl_context ctx = get_info<command_queue::context_info_type>(command_queue());
-                marker = clCreateUserEvent(ctx, &err);
-                OCLM_THROW_IF_EXCEPTION(err, "clCreateUserEvents");
-
-#ifdef CL_VERSION_1_2
-                err = clEnqueueMarkerWithWaitList(command_queue(),
-                    static_cast<cl_uint>(e_.size()), &e_[0], &marker);
-                OCLM_THROW_IF_EXCEPTION(err, "clEnqueueMarkerWithWaitList");
-#endif
-            }
         }
 
         event(std::vector<event> e)
-            : marker(0), e_(e.begin(), e.end())
+            : e_(e.begin(), e.end())
         {
-            if(e.empty()) return;
-            if(e.size() == 1)
-            {
-                marker = e_[0];
-            }
-            else
-            {
-                cl_int err = CL_SUCCESS;
-                cl_context ctx = get_info<command_queue::context_info_type>(command_queue());
-                marker = clCreateUserEvent(ctx, &err);
-                OCLM_THROW_IF_EXCEPTION(err, "clCreateUserEvents");
-
-#ifdef CL_VERSION_1_2
-                err = clEnqueueMarkerWithWaitList(command_queue(),
-                    static_cast<cl_uint>(e_.size()), &e_[0], &marker);
-                OCLM_THROW_IF_EXCEPTION(err, "clEnqueueMarkerWithWaitList");
-#endif
-            }
         }
 
-        void get()
+        void get() const
         {
             if(e_.empty()) return;
             cl_int err = CL_SUCCESS;
-            err = clWaitForEvents(1, &marker);
+            err = clWaitForEvents(static_cast<cl_uint>(e_.size()), &e_[0]);
             OCLM_THROW_IF_EXCEPTION(err, "clWaitForEvents");
         }
 
-        operator cl_event const &() const
+        operator cl_event() const
         {
-            return marker;
+            cl_int err = CL_SUCCESS;
+            if(e_.size() == 1)
+            {
+                return e_[0];
+            }
+            if(!e_.empty())
+            {
+                cl_context ctx = get_info<command_queue::context_info_type>(command_queue());
+                cl_event e = clCreateUserEvent(ctx, &err);
+                OCLM_THROW_IF_EXCEPTION(err, "clCreateUserEvents");
+    #ifdef CL_VERSION_1_2
+                err = clEnqueueMarkerWithWaitList(command_queue(),
+                    static_cast<cl_uint>(e_.size()), &e_[0], &marker);
+                OCLM_THROW_IF_EXCEPTION(err, "clEnqueueMarkerWithWaitList");
+    #else
+                get();
+                err = clSetUserEventStatus(e, CL_COMPLETE);
+    #endif
+                return e;
+            }
+            else
+                return cl_event();
         }
 
         typedef event_info<CL_EVENT_COMMAND_QUEUE, cl_command_queue> command_queue_info_type;
 
-        cl_command_queue command_queue()
+        cl_command_queue command_queue() const
         {
             return get_info<command_queue_info_type>(e_[0]);
         }
 
         private:
-            cl_event marker;
             std::vector<cl_event> e_;
     };
 }
