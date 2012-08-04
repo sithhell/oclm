@@ -58,8 +58,11 @@ set(BOOST_LIBRARIES date_time
                     regex
                     serialization
                     system
-                    thread
-                    chrono)
+                    thread)
+
+if(${BOOST_MINOR_VERSION} GREATER 46)
+  set(BOOST_LIBRARIES ${BOOST_LIBRARIES} chrono)
+endif()
 
 # We have a patched version of FindBoost loosely based on the one that Kitware ships
 find_package(OCLM_Boost)
@@ -72,7 +75,9 @@ oclm_add_library(${BOOST_thread_LIBRARY})
 oclm_add_library(${BOOST_regex_LIBRARY})
 oclm_add_library(${BOOST_system_LIBRARY})
 oclm_add_library(${BOOST_filesystem_LIBRARY})
-# oclm_add_library(${BOOST_chrono_LIBRARY})
+if(${BOOST_MINOR_VERSION} GREATER 46)
+    oclm_add_library(${BOOST_chrono_LIBRARY})
+endif()
 
 # make auto linking to shared libraries work on Windows
 add_definitions(-DBOOST_ALL_DYN_LINK)
