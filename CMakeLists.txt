@@ -79,6 +79,14 @@ if(${BOOST_MINOR_VERSION} GREATER 46)
     oclm_add_library(${BOOST_chrono_LIBRARY})
 endif()
 
+########################################################################################
+# Adding the include folder to the binary root to help other programs find the headers.#
+########################################################################################
+
+
+file(COPY ${OCLM_SOURCE_DIR}/include DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
+########################################################################################
 # make auto linking to shared libraries work on Windows
 add_definitions(-DBOOST_ALL_DYN_LINK)
 
