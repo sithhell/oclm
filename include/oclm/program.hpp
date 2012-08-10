@@ -10,40 +10,26 @@
 #include <oclm/config.hpp>
 
 #include <string>
-#include <boost/filesystem/path.hpp>
+// #include <boost/filesystem/path.hpp>
 #include <boost/range.hpp>
 
 namespace oclm {
 
     struct program
     {
-        /*
-        program() : p(0) {}
-        ~program()
-        {
-            //if(p != 0) ::clReleaseProgram(p);
-        }
-
-        program(program const & other)
-            : p(other.p)
-        {
-            if(p != 0) ::clRetainProgram(p);
-        }
-
-        program & operator=(program const & other)
-        {
-            p = other.p;
-            if(p != 0) ::clRetainProgram(p);
-
-            return *this;
-        }
-        */
-
-        // Creates a program from a strings ...
+        /// \brief Creates a program from a string
         template <typename Range>
-        program(Range const & r)
-            : content_(boost::begin(r), boost::end(r))
+        program(Range const & src)
+            : content_(boost::begin(src), boost::end(src))
         {}
+
+        /// \brief Creates a program from a string and provide some build args
+        template <typename RangeSrc, typename RangeArgs>
+        program(RangeSrc const & src, RangeArgs const & args)
+            : content_(boost::begin(src), boost::end(src))
+            , buildArgs_(boost::begin(args), boost::end(args))
+        {}
+
         //program(std::vector<std::string> const &);
         // Creates a program from a files ...
         //program(boost::filesystem::path const &);
@@ -52,6 +38,7 @@ namespace oclm {
         // TODO: add constructors for binaries
  
         std::vector<char> content_;
+        std::vector<char> buildArgs_;
     };
 }
 

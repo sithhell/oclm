@@ -19,8 +19,9 @@ const char src[] =
 
 TEST_CASE( "programm", "Create a program")
 {
-    // Platform and Device setup
-    REQUIRE_NOTHROW( oclm::get_platform() );
-
+	// default constructor with source code only
     REQUIRE_NOTHROW( oclm::program p(src) );
+
+	// default constructor with source code and build arguments
+    REQUIRE_NOTHROW( oclm::program p(src, "-Werror") );
 }
