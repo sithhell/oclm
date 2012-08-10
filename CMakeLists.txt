@@ -79,12 +79,15 @@ if(${BOOST_MINOR_VERSION} GREATER 46)
     oclm_add_library(${BOOST_chrono_LIBRARY})
 endif()
 
-########################################################################################
-# Adding the include folder to the binary root to help other programs find the headers.#
-########################################################################################
+####################################################################################################
+# Adding a link to the relevant folders to the binary root to help other programs find the headers.#
+####################################################################################################
 
-
-file(COPY ${OCLM_SOURCE_DIR}/include DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+FILE (WRITE ${CMAKE_BINARY_DIR}/includeLoc.cmake "
+set(OCLM_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
+set (OCLM_LIBRARY_DIR ${CMAKE_BINARY_DIR}/lib)
+set (OCLM_BIN_ROOT ${CMAKE_BINARY_DIR}/bin)
+")
 
 ########################################################################################
 # make auto linking to shared libraries work on Windows
