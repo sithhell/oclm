@@ -17,9 +17,11 @@ const char src[] =
     "  C[tid] = A[tid] + B[tid];"
     "}";
 
-TEST_CASE( "kernel", "Create a kernel from a program")
+TEST_CASE( "kernel", "Create a kernel from source code")
 {
-    // Platform and Device setup
-    REQUIRE_NOTHROW( oclm::get_platform() );
-    REQUIRE_NOTHROW( oclm::program p(src) );
+	oclm::program p(src);
+
+    REQUIRE_NOTHROW( oclm::kernel k(p, "vecadd") );
+    REQUIRE_NOTHROW( oclm::kernel k(src, "vecadd") );
+    REQUIRE_NOTHROW( oclm::kernel k(src, "-Werror", "vecadd") );
 }

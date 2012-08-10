@@ -16,11 +16,24 @@ namespace oclm {
 
     struct kernel
     {
+        /// \brief create a kernel object
+        ///
+        /// Create a kernel named \kernel_name from a program \p 
         kernel(program const & p, std::string const & kernel_name)
             : p_(p)
             , kernel_name_(kernel_name)
         {}
-    
+
+        /// \brief create a kernel object
+        ///
+        /// Create a kernel named \kernel_name from a string \p src with build
+        /// arguments \p args
+        kernel(std::string const & src, std::string const & args,
+            std::string const & kernel_name)
+            : p_(oclm::program(src,args))
+            , kernel_name_(kernel_name)
+        {}
+
         template <typename Tag>
         oclm::function operator[](kernel_range<Tag> f)
         {

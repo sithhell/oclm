@@ -38,7 +38,7 @@ namespace oclm {
         // TODO: add constructors for binaries
  
         std::vector<char> content_;
-        std::vector<char> buildArgs_;
+        std::string buildArgs_;
     };
 }
 

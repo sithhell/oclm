@@ -7,6 +7,8 @@
 #ifndef OCLM_ASYNC_HPP
 #define OCLM_ASYNC_HPP
 
+#include <string>
+
 #include <oclm/config.hpp>
 
 #include <oclm/command_queue.hpp>
@@ -23,9 +25,30 @@ namespace oclm {
         cl_program p = clCreateProgramWithSource(queue.ctx_, 1, strings, length, &err);
         OCLM_THROW_IF_EXCEPTION(err, "clCreateProgramWithSource");
 
-        // TODO: add error callback
         cl_device_id did = queue.d_;
         err = ::clBuildProgram(p, 1, &did, NULL, NULL, NULL);
+
+        // check for build errors
+        if ( err != CL_SUCCESS )
+        {
+
+            cl_int tmpErr = CL_SUCCESS;
+            std::size_t buildLogSize;
+
+            tmpErr = ::clGetProgramBuildInfo(p, did, CL_PROGRAM_BUILD_LOG, 0, NULL, &buildLogSize);
+            OCLM_THROW_IF_EXCEPTION(tmpErr, "clGetProgramBuildInfo");
+
+            char* buildLog = new char[buildLogSize];
+
+            tmpErr = ::clGetProgramBuildInfo(p, did, CL_PROGRAM_BUILD_LOG, buildLogSize, buildLog, NULL);
+            OCLM_THROW_IF_EXCEPTION(tmpErr, "clGetProgramBuildInfo");
+
+            std::cerr << "Build log:\n" << buildLog << std::endl;
+
+            delete buildLog;
+
+            OCLM_THROW_IF_EXCEPTION(err, "clBuildProgram");
+        }
 
         cl_kernel k = clCreateKernel(p, &pk.kernel_name_[0], &err);
         OCLM_THROW_IF_EXCEPTION(err, "clCreateKernel");
