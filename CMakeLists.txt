@@ -27,6 +27,7 @@ oclm_add_library(${OPENCL_LIBRARY})
 include_directories(${OPENCL_INCLUDE_DIR})
 link_directories(${OPENCL_LIBRARY_DIR})
 
+
 if(UNIX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ansi")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic")
@@ -79,16 +80,6 @@ if(${BOOST_MINOR_VERSION} GREATER 46)
     oclm_add_library(${BOOST_chrono_LIBRARY})
 endif()
 
-####################################################################################################
-# Adding a link to the relevant folders to the binary root to help other programs find the headers.#
-####################################################################################################
-
-FILE (WRITE ${CMAKE_BINARY_DIR}/includeLoc.cmake "
-set(OCLM_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
-set (OCLM_LIBRARY_DIR ${CMAKE_BINARY_DIR}/lib)
-set (OCLM_BIN_ROOT ${CMAKE_BINARY_DIR}/bin)
-")
-
 ########################################################################################
 # make auto linking to shared libraries work on Windows
 add_definitions(-DBOOST_ALL_DYN_LINK)
@@ -100,3 +91,11 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 add_subdirectory(${OCLM_SOURCE_DIR}/src)
 add_subdirectory(${OCLM_SOURCE_DIR}/examples)
 add_subdirectory(${OCLM_SOURCE_DIR}/UnitTests)
+
+
+#########
+# Install include directory
+FILE(GLOB files "${CMAKE_SOURCE_DIR}/include/oclm/*.hpp")
+INSTALL(FILES ${files} DESTINATION include/oclm)
+FILE(GLOB files "${CMAKE_SOURCE_DIR}/include/oclm/util/*.hpp")
+INSTALL(FILES ${files} DESTINATION include/oclm/util)
