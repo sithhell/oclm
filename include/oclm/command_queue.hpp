@@ -33,6 +33,12 @@ namespace oclm
         : boost::mpl::true_
     {};
 
+    enum queue_selector
+    {
+        default_     = 0,
+        interactive_ = 1
+    };
+
     struct command_queue
     {
         typedef command_queue_info<CL_QUEUE_CONTEXT, cl_context> context_info_type;
@@ -41,7 +47,6 @@ namespace oclm
         {
             return get_info<context_info_type>(cq_);
         }
-
 
         command_queue()
             : cq_(0)
@@ -108,7 +113,14 @@ namespace oclm
 
             cq_ = create(ctx_, d_);
         }
-        // TODO: add more ctors for constructing a queue with explicit context etc
+
+        /// \brief Interactive \p platform and \p device selection
+        ///
+        /// At runtime the user will be asked via terminal input to select the
+        /// desired \p platform and \p device(s)
+        command_queue( const oclm::queue_selector decission );
+
+        // TODO: add more ctors for constructing a queue with explicit context...
 
         operator cl_command_queue const &() const
         {

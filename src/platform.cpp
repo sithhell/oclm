@@ -33,4 +33,5 @@ namespace oclm
         util::static_<platform_manager> man;
         return man.get();
     }
-}
+
+} // namespace oclm

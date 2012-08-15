@@ -36,7 +36,7 @@ namespace oclm
         : boost::mpl::true_
     {};
 
-    extern const context_info<CL_CONTEXT_DEVICES, std::vector<cl_device_id> >  context_devices;
+    extern const context_info<CL_CONTEXT_DEVICES, std::vector<cl_device_id> >               context_devices;
     // TODO: add remaining context infos ...
 }
 
