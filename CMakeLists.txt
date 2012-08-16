@@ -93,7 +93,7 @@ add_subdirectory(${OCLM_SOURCE_DIR}/examples)
 add_subdirectory(${OCLM_SOURCE_DIR}/UnitTests)
 
 
-#########
+########################################################################################
 # Install include directory
 FILE(GLOB files "${CMAKE_SOURCE_DIR}/include/oclm/*.hpp")
 INSTALL(FILES ${files} DESTINATION include/oclm)
