@@ -28,7 +28,7 @@ void runFunction(const int& numThreads, const oclm::program& p, const std::strin
         // create a command queue with a device type and a platform ... context and
         // platform etc is selected in the background ... this will be managed as
         // global state
-        oclm::command_queue queue(oclm::device::default_);
+        oclm::command_queue queue(oclm::device::default_, false);
 
 
         // asynchronously fire the opencl function on the command queue, the
@@ -40,36 +40,28 @@ void runFunction(const int& numThreads, const oclm::program& p, const std::strin
         e1.get();
 }
 
-int main()
+void basicTests(const std::string& src)
 {
-    
+    std::ofstream fout;
+    fout.open("log1.txt");
 
-    oclm::get_platform();
-    //Open oclm/kernelUtil/kernels/speedTest.cl
-    const std::string src = readCLFile("/kernels/speedTest.cl");
-
+    std::cout << "Initializing Part 1 of the speed test: basic memory read/write and arithmetic operations.\n";
     // create a program from source ... possibly a vector of sources ...
     oclm::program p(src);
-    
-    std::ofstream fout;
-    fout.open("log.txt");
-
-
+    fout << "BASIC TESTS\n";
     for (int i = 0; i < 24; i++)
     {
         int numThreads = (int)std::pow((double)2, (double)i);
 
         //assignLocal
-
+        std::cout << "Running test with " << numThreads << " threads.\n";
         std::string function = "assignLocal";
         oclm::util::high_resolution_timer t;
         runFunction(numThreads, p, function);
         // get the time elapsed before outputting to avoid including the output operation in the performance time
         double elapsed = t.elapsed();
-        std::cout << "\n--------\nBasic local memory integer assignment operation with: 2^" << i << " or "
-            << numThreads << " threads completed in:\n" << elapsed << "s.\n--------\n";
-        fout << "\n--------\nBasic local memory integer assignment operation with: 2^" << i << " or "
-            << numThreads << " threads completed in:\n" << elapsed << "s.\n--------\n";
+        fout << "\n" << "Basic local memory integer assignment operation with: 2^" << i << " or "
+            << numThreads << " threads completed in:\n" << elapsed << "s.\n";
         //assignGlobal
 
         function = "assignGlobal";
@@ -77,11 +69,9 @@ int main()
         runFunction(numThreads, p, function);
         // get the time elapsed before outputting to avoid including the output operation in the performance time
         elapsed = t.elapsed();
-        std::cout << "\n--------\nBasic global memory integer assignment operation with: 2^" << i << " or "
-            << numThreads << " threads completed in:\n" << elapsed << "s.\n--------\n";
         
-        fout << "\n--------\nBasic global memory integer assignment operation with: 2^" << i << " or "
-            << numThreads << " threads completed in:\n" << elapsed << "s.\n--------\n";
+        fout << "\n" << "Basic global memory integer assignment operation with: 2^" << i << " or "
+            << numThreads << " threads completed in:\n" << elapsed << "s.\n";
 
         //vecAdd
 
@@ -90,15 +80,26 @@ int main()
         runFunction(numThreads, p, function);
         // get the time elapsed before outputting to avoid including the output operation in the performance time
         elapsed = t.elapsed();
-        std::cout << "\n--------\nBasic global memory vector addition operation with: 2^" << i << " or "
-            << numThreads << " threads completed in:\n" << elapsed << "s.\n--------\n";
 
-        fout << "\n--------\nBasic global memory vector addition operation with: 2^" << i << " or "
-            << numThreads << " threads completed in:\n" << elapsed << "s.\n--------\n";
+        fout << "\n" << "Basic global memory vector addition operation with: 2^" << i << " or "
+            << numThreads << " threads completed in:\n" << elapsed << "s.\n";
 
     }
+
     fout.close();
-    std::cout << "Performance information output to log.txt\n";
+    std::cout << "Performance information output to log1.txt\n";
+}
+
+int main()
+{
+    
+
+    oclm::get_platform();
+    //Open oclm/kernelUtil/kernels/speedTest.cl
+    const std::string src = readCLFile("/kernels/speedTest.cl");
+
+    basicTests(src);
+    
     //check if we're using Windows
     #if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(__WINDOWS__) || defined(__TOS_WIN__)
         //if so, pause because the console usually closes at the end of execution

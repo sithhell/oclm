@@ -65,7 +65,17 @@ namespace oclm
               , devices
             );
         }
-
+        
+        // This is the entry point of our selecting devices ...
+        result_type operator()(devices_type & devices, const bool toggle) const
+        {
+            std::vector<platform> platforms;
+            select_platforms_no_cout(platforms);
+            select_devices_no_cout(
+                platforms
+              , devices
+            );
+        }
         bool operator()(platform const & p, platforms_type & platforms) const
         {
             return select(p, platforms, typename is_platform_selector<F>::type());
@@ -90,6 +100,7 @@ namespace oclm
             return false;
         }
         
+        
         void select_platforms(platforms_type & platforms) const
         {
             platforms.reserve(get_platforms().size());
@@ -111,7 +122,28 @@ namespace oclm
                 platforms = get_platforms();
             }
         }
+        
+        void select_platforms_no_cout(platforms_type & platforms) const
+        {
+            platforms.reserve(get_platforms().size());
 
+            BOOST_FOREACH(platform const & p, get_platforms())
+            {
+                //std::cout << p.get(platform_name) << "\n";
+                if(select(p, platforms, typename is_platform_selector<F>::type()))
+                {
+                    if(std::find(platforms.begin(), platforms.end(), p) == platforms.end())
+                    {
+                        platforms.push_back(p);
+                    }
+                }
+            }
+            
+            if(platforms.size() == 0)
+            {
+                platforms = get_platforms();
+            }
+        }
         void select_devices(platforms_type & platforms, devices_type & devices) const
         {
             std::cout << "-----------------\n";
@@ -138,8 +170,36 @@ namespace oclm
             std::cout << "-----------------\n";
         }
 
+        void select_devices_no_cout(platforms_type & platforms, devices_type & devices) const
+        {
+            //std::cout << "-----------------\n";
+            BOOST_FOREACH(platform const & p, platforms)
+            {
+                //std::cout << "selected platform: " << p.get(platform_name) << "\n";
+                BOOST_FOREACH(device const & d, p.devices)
+                {
+                    //std::cout << d.get(device_name) << "\n";
+                    if(select(d, devices, typename is_device_selector<F>::type()))
+                    {
+                        if(std::find(devices.begin(), devices.end(), d) == devices.end())
+                        {
+                            devices.push_back(d);
+                        }
+                    }
+                }
+            }
+            /*std::cout << "selected devices:\n";
+            BOOST_FOREACH(device const & d, devices)
+            {
+                std::cout << d.get(device_name) << "\n";
+            }
+            std::cout << "-----------------\n";*/
+        }
+
         F f_;
     };
+         
+
 
     template <typename F>
     selector<F> const & make_selector(selector<F> const & f)
