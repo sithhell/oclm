@@ -86,7 +86,7 @@ int main()
             << numThreads << " threads completed in:\n" << elapsed << "s.\n";
     }
     fout.close();
-    std::cout << "Performance information output to log1.txt\n";
+    std::cout << "Basic performance information output to log1.txt\n";
     
     //check if we're using Windows
     #if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(__WINDOWS__) || defined(__TOS_WIN__)
