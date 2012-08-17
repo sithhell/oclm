@@ -95,7 +95,17 @@ add_subdirectory(${OCLM_SOURCE_DIR}/UnitTests)
 
 ########################################################################################
 # Install include directory
-FILE(GLOB files "${CMAKE_SOURCE_DIR}/include/oclm/*.hpp")
-INSTALL(FILES ${files} DESTINATION include/oclm)
-FILE(GLOB files "${CMAKE_SOURCE_DIR}/include/oclm/util/*.hpp")
-INSTALL(FILES ${files} DESTINATION include/oclm/util)
+MACRO(SUBDIRCOPY curdir)
+  FILE(GLOB children ${curdir}/ ${curdir}/*)
+  FOREACH(child ${children})
+    IF(IS_DIRECTORY ${child}/)
+       # Install include subdirectories
+       FILE(GLOB files "${child}/*.hpp")
+       STRING(REPLACE ${OCLM_SOURCE_DIR} ${CMAKE_BINARY_DIR}/include bindir ${child})
+       INSTALL(FILES ${files} DESTINATION ${bindir})
+       SUBDIRCOPY(${child})
+    ENDIF()
+  ENDFOREACH()
+ENDMACRO()
+
+SUBDIRCOPY(${OCLM_SOURCE_DIR}/include)
