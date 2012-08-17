@@ -36,6 +36,10 @@ set(
     ${CMAKE_SOURCE_DIR}/include/oclm/program.hpp
     ${CMAKE_SOURCE_DIR}/include/oclm/range.hpp
     ${CMAKE_SOURCE_DIR}/include/oclm/selector.hpp
+
+    ${CMAKE_SOURCE_DIR}/include/oclm/kernelUtil/readCL.hpp
+    ${CMAKE_SOURCE_DIR}/include/oclm/util/high_resolution_timer.hpp
+    
 )
 
 set(

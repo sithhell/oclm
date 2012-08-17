@@ -9,3 +9,6 @@ target_link_libraries(vecadd oclm)
 
 add_executable(printInfos printInfos.cpp)
 target_link_libraries(printInfos oclm)
+
+add_executable(speedTest speedTest.cpp)
+target_link_libraries(speedTest oclm)
