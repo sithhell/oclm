@@ -16,11 +16,25 @@ std::string readCLFile(std::string clFile)
    
    string src;
 
+
+   if (pFile == NULL)
+   {
+       fileName = "." + clFile;
+
+   }
+   
+   pFile = fopen ( fileName.c_str(), "r");
    string errorMessage = "Error opening file at path: " + fileName;
 
    if (pFile == NULL)
    {
-       perror (fileName.c_str());
+       perror (errorMessage.c_str());
+        //check if we're using Windows
+       #if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(__WINDOWS__) || defined(__TOS_WIN__)
+           //if so, pause because the console usually closes at the end of execution
+           system("Pause");
+       #endif
+       exit(1);
    }
    else
    {

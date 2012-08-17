@@ -50,6 +50,10 @@ int main()
 
     // create a program from source ... possibly a vector of sources ...
     oclm::program p(src);
+    
+    std::ofstream fout;
+    fout.open("log.txt");
+
 
     for (int i = 0; i < 24; i++)
     {
@@ -64,7 +68,8 @@ int main()
         double elapsed = t.elapsed();
         std::cout << "\n--------\nBasic local memory integer assignment operation with: 2^" << i << " or "
             << numThreads << " threads completed in:\n" << elapsed << "s.\n--------\n";
-
+        fout << "\n--------\nBasic local memory integer assignment operation with: 2^" << i << " or "
+            << numThreads << " threads completed in:\n" << elapsed << "s.\n--------\n";
         //assignGlobal
 
         function = "assignGlobal";
@@ -75,6 +80,9 @@ int main()
         std::cout << "\n--------\nBasic global memory integer assignment operation with: 2^" << i << " or "
             << numThreads << " threads completed in:\n" << elapsed << "s.\n--------\n";
         
+        fout << "\n--------\nBasic global memory integer assignment operation with: 2^" << i << " or "
+            << numThreads << " threads completed in:\n" << elapsed << "s.\n--------\n";
+
         //vecAdd
 
         function = "vecAdd";
@@ -85,7 +93,12 @@ int main()
         std::cout << "\n--------\nBasic global memory vector addition operation with: 2^" << i << " or "
             << numThreads << " threads completed in:\n" << elapsed << "s.\n--------\n";
 
+        fout << "\n--------\nBasic global memory vector addition operation with: 2^" << i << " or "
+            << numThreads << " threads completed in:\n" << elapsed << "s.\n--------\n";
+
     }
+    fout.close();
+    std::cout << "Performance information output to log.txt\n";
     //check if we're using Windows
     #if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(__WINDOWS__) || defined(__TOS_WIN__)
         //if so, pause because the console usually closes at the end of execution
