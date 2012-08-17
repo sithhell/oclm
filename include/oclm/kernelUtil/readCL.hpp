@@ -20,10 +20,8 @@ std::string readCLFile(std::string clFile)
    if (pFile == NULL)
    {
        fileName = "." + clFile;
-
+       pFile = fopen ( fileName.c_str(), "r");
    }
-   
-   pFile = fopen ( fileName.c_str(), "r");
    string errorMessage = "Error opening file at path: " + fileName;
 
    if (pFile == NULL)
