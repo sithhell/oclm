@@ -27,6 +27,7 @@ oclm_add_library(${OPENCL_LIBRARY})
 include_directories(${OPENCL_INCLUDE_DIR})
 link_directories(${OPENCL_LIBRARY_DIR})
 
+
 if(UNIX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ansi")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic")
@@ -79,6 +80,7 @@ if(${BOOST_MINOR_VERSION} GREATER 46)
     oclm_add_library(${BOOST_chrono_LIBRARY})
 endif()
 
+########################################################################################
 # make auto linking to shared libraries work on Windows
 add_definitions(-DBOOST_ALL_DYN_LINK)
 
@@ -89,3 +91,21 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 add_subdirectory(${OCLM_SOURCE_DIR}/src)
 add_subdirectory(${OCLM_SOURCE_DIR}/examples)
 add_subdirectory(${OCLM_SOURCE_DIR}/UnitTests)
+
+
+########################################################################################
+# Install include directory
+MACRO(SUBDIRCOPY curdir)
+  FILE(GLOB children ${curdir}/ ${curdir}/*)
+  FOREACH(child ${children})
+    IF(IS_DIRECTORY ${child}/)
+       # Install include subdirectories
+       FILE(GLOB files "${child}/*.hpp" "${child}/*.cl" )
+       STRING(REPLACE ${OCLM_SOURCE_DIR} ${CMAKE_BINARY_DIR} bindir ${child})
+       INSTALL(FILES ${files} DESTINATION ${bindir})
+       SUBDIRCOPY(${child})
+    ENDIF()
+  ENDFOREACH()
+ENDMACRO()
+
+SUBDIRCOPY(${OCLM_SOURCE_DIR}/include)

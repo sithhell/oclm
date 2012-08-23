@@ -113,7 +113,7 @@ namespace oclm
 
             cq_ = create(ctx_, d_);
         }
-
+        
         /// \brief Interactive \p platform and \p device selection
         ///
         /// At runtime the user will be asked via terminal input to select the
@@ -121,6 +121,24 @@ namespace oclm
         command_queue( const oclm::queue_selector decission );
 
         // TODO: add more ctors for constructing a queue with explicit context...
+
+        template <typename F>
+        command_queue(F const & f, const bool toggle)
+        {
+            std::vector<device> devices;
+            make_selector(f)(devices, toggle);
+
+            if(devices.size() == 0)
+            {
+                throw exception("command_queue::command_queue(selector): No devices found!");
+            }
+
+            ctx_ = create_context(devices[0]);
+            d_ = devices[0];
+
+            cq_ = create(ctx_, d_);
+        }
+        // TODO: add more ctors for constructing a queue with explicit context etc
 
         operator cl_command_queue const &() const
         {
