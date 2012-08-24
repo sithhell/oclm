@@ -10,6 +10,8 @@
 #include <oclm/config.hpp>
 
 #include <string>
+#include <vector>
+
 // #include <boost/filesystem/path.hpp>
 #include <boost/range.hpp>
 
