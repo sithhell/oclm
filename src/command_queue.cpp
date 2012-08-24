@@ -1,4 +1,9 @@
 
+//  Copyright (c) 2012 Julian Hornich
+//
+//  Distributed under the Boost Software License, Version 1.0. (See accompanying
+//  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
 #include <oclm/command_queue.hpp>
 #include <oclm/context.hpp>
 
@@ -9,7 +14,7 @@
 
 namespace oclm
 {
-    command_queue( const oclm::queue_selector qSelector )
+    command_queue::command_queue( const oclm::queue_selector qSelector )
     {
         platform    chosen_platform;
         device      chosen_device;
