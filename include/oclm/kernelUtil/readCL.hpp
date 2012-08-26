@@ -1,6 +1,4 @@
-#ifndef std::string
-    #include <string>
-#endif
+#include <string>
 
 std::string readCLFile(std::string clFile)
 {
