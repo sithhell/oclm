@@ -74,7 +74,7 @@ namespace oclm {
                 OCLM_THROW_IF_EXCEPTION(err, "clCreateUserEvents");
     #ifdef CL_VERSION_1_2
                 err = clEnqueueMarkerWithWaitList(command_queue(),
-                    static_cast<cl_uint>(e_.size()), &e_[0], &marker);
+                    static_cast<cl_uint>(e_.size()), &e_[0], &e);
                 OCLM_THROW_IF_EXCEPTION(err, "clEnqueueMarkerWithWaitList");
     #else
                 get();
