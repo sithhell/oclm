@@ -8,14 +8,9 @@
 
 namespace oclm
 {
-    const device_info<CL_DEVICE_PROFILE> device_profile =
-        device_info<CL_DEVICE_PROFILE>();
-    const device_info<CL_DEVICE_VERSION> device_version =
-        device_info<CL_DEVICE_VERSION>();
-    const device_info<CL_DEVICE_NAME> device_name =
-        device_info<CL_DEVICE_NAME>();
-    const device_info<CL_DEVICE_VENDOR> device_vendor =
-        device_info<CL_DEVICE_VENDOR>();
-    const device_info<CL_DEVICE_EXTENSIONS> device_extensions =
-        device_info<CL_DEVICE_EXTENSIONS>();
+    // const device_info<CL_DEVICE_PROFILE> device_profile = device_info<CL_DEVICE_PROFILE>();
+    // const device_info<CL_DEVICE_VERSION> device_version = device_info<CL_DEVICE_VERSION>();
+    // const device_info<CL_DEVICE_NAME> device_name = device_info<CL_DEVICE_NAME>();
+    // const device_info<CL_DEVICE_VENDOR> device_vendor = device_info<CL_DEVICE_VENDOR>();
+    // const device_info<CL_DEVICE_EXTENSIONS> device_extensions = device_info<CL_DEVICE_EXTENSIONS>();
 }
