@@ -10,6 +10,7 @@
 #include <oclm/config.hpp>
 #include <oclm/device.hpp>
 #include <oclm/context.hpp>
+#include <oclm/get_info.hpp>
 
 namespace oclm
 {

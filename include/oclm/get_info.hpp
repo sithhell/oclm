@@ -9,6 +9,10 @@
 
 #include <oclm/config.hpp>
 #include <oclm/info.hpp>
+#include <oclm/exception.hpp>
+
+#include <vector>
+#include <string>
 
 namespace oclm
 {

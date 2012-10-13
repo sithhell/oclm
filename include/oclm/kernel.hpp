@@ -11,8 +11,31 @@
 
 #include <oclm/range.hpp>
 #include <oclm/function.hpp>
+#include <oclm/get_info.hpp>
 
 namespace oclm {
+
+    template <int Name, typename T>
+    struct kernel_info
+        : info<
+            ::cl_command_queue
+          , T
+          , ::clGetCommandQueueInfo
+          , Name
+        >
+    {};
+    
+    template <typename>
+    struct is_kernel_info
+        : boost::mpl::false_
+    {};
+
+    template <int Name, typename T>
+    struct is_kernel_info<kernel_info<Name, T> >
+        : boost::mpl::true_
+    {};
+
+    // extern OCLM_EXPORT const kernel_info<CL_QUEUE_CONTEXT, cl_context>                      queue_context;
 
     struct kernel
     {
@@ -42,7 +65,31 @@ namespace oclm {
             return oclm::function(p_, kernel_name_, coll);
         }
 
+        template <typename Info>
+        typename boost::enable_if<
+            typename is_kernel_info<Info>::type
+          , typename Info::result_type
+        >::type
+        get(Info) const
+        {
+            return get_info<Info>(k_);
+        }
+
+        template <typename Info>
+        typename boost::disable_if<
+            typename is_kernel_info<Info>::type
+          , void
+        >::type
+        get(Info) const
+        {
+            static_assert(
+                is_kernel_info<Info>::value
+              , "Template parameter is not a valid command_queue info type"
+            );
+        }
+
         program p_;
+        cl_kernel k_;
         std::string kernel_name_;
     };
 
