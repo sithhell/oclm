@@ -11,9 +11,40 @@
 
 #include <oclm/event.hpp>
 #include <oclm/command_queue.hpp>
+#include <oclm/info.hpp>
 
 namespace oclm
 {
+    template <int Name, typename T>
+    struct buffer_info
+        : info<
+            ::cl_mem
+          , T
+          , ::clGetMemObjectInfo
+          , Name
+        >
+    {};
+    
+    template <typename>
+    struct is_buffer_info
+        : boost::mpl::false_
+    {};
+
+    template <int Name, typename T>
+    struct is_buffer_info<buffer_info<Name, T> >
+        : boost::mpl::true_
+    {};
+
+    extern OCLM_EXPORT const buffer_info<CL_MEM_TYPE, cl_mem_object_type>       buffer_type;
+    extern OCLM_EXPORT const buffer_info<CL_MEM_FLAGS, cl_mem_flags>            buffer_flags;
+    extern OCLM_EXPORT const buffer_info<CL_MEM_SIZE, ::size_t>                 buffer_size;
+    extern OCLM_EXPORT const buffer_info<CL_MEM_HOST_PTR, void*>                buffer_host_ptr;
+    extern OCLM_EXPORT const buffer_info<CL_MEM_MAP_COUNT, cl_uint>             buffer_map_count;
+    extern OCLM_EXPORT const buffer_info<CL_MEM_REFERENCE_COUNT, cl_uint>       buffer_reference_count;
+    extern OCLM_EXPORT const buffer_info<CL_MEM_CONTEXT, cl_context>            buffer_context;
+    extern OCLM_EXPORT const buffer_info<CL_MEM_ASSOCIATED_MEMOBJECT, cl_mem>   buffer_object;
+    extern OCLM_EXPORT const buffer_info<CL_MEM_OFFSET, ::size_t>               buffer_offset;
+
     namespace policy
     {
         struct noop;
@@ -95,6 +126,29 @@ namespace oclm
             mem = o.mem;
 
             return *this;
+        }
+
+        template <typename Info>
+        typename boost::enable_if<
+            typename is_buffer_info<Info>::type
+          , typename Info::result_type
+        >::type
+        get(Info) const
+        {
+            return get_info<Info>(mem);
+        }
+
+        template <typename Info>
+        typename boost::disable_if<
+            typename is_buffer_info<Info>::type
+          , void
+        >::type
+        get(Info) const
+        {
+            static_assert(
+                is_buffer_info<Info>::value
+              , "Template parameter is not a valid buffer info type"
+            );
         }
 
         void create(command_queue const & queue)

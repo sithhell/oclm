@@ -145,6 +145,29 @@ namespace oclm
         }
         // TODO: add more ctors for constructing a queue with explicit context etc
 
+        template <typename Info>
+        typename boost::enable_if<
+            typename is_command_queue_info<Info>::type
+          , typename Info::result_type
+        >::type
+        get(Info) const
+        {
+            return get_info<Info>(cq_);
+        }
+
+        template <typename Info>
+        typename boost::disable_if<
+            typename is_command_queue_info<Info>::type
+          , void
+        >::type
+        get(Info) const
+        {
+            static_assert(
+                is_command_queue_info<Info>::value
+              , "Template parameter is not a valid command_queue info type"
+            );
+        }
+
         operator cl_command_queue const &() const
         {
             return cq_;

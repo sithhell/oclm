@@ -69,6 +69,29 @@ namespace oclm {
         //program(std::vector<boost::filesystem::path> const &);
 
         // TODO: add constructors for binaries
+
+        // template <typename Info>
+        // typename boost::enable_if<
+        //     typename is_program_info<Info>::type
+        //   , typename Info::result_type
+        // >::type
+        // get(Info) const
+        // {
+        //     return get_info<Info>(program_);
+        // }
+
+        // template <typename Info>
+        // typename boost::disable_if<
+        //     typename is_program_info<Info>::type
+        //   , void
+        // >::type
+        // get(Info) const
+        // {
+        //     static_assert(
+        //         is_program_info<Info>::value
+        //       , "Template parameter is not a valid program info type"
+        //     );
+        // }
  
         std::vector<char> content_;
         std::string buildArgs_;
