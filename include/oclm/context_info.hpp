@@ -37,7 +37,9 @@ namespace oclm
     {};
 
     extern const context_info<CL_CONTEXT_DEVICES, std::vector<cl_device_id> >               context_devices;
-    // TODO: add remaining context infos ...
+    extern const context_info<CL_CONTEXT_REFERENCE_COUNT, cl_uint>                          context_reference_count;
+    extern const context_info<CL_CONTEXT_PROPERTIES, std::vector<cl_context_properties> >   context_properties_info;
+    extern const context_info<CL_CONTEXT_NUM_DEVICES, cl_uint >                             context_num_devices;
 }
 
 #endif
