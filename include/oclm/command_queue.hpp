@@ -33,6 +33,11 @@ namespace oclm
         : boost::mpl::true_
     {};
 
+    extern OCLM_EXPORT const command_queue_info<CL_QUEUE_CONTEXT, cl_context>                      queue_context;
+    extern OCLM_EXPORT const command_queue_info<CL_QUEUE_DEVICE, cl_device_id>                     queue_device;
+    extern OCLM_EXPORT const command_queue_info<CL_QUEUE_REFERENCE_COUNT, cl_uint>                 queue_reference_count;
+    extern OCLM_EXPORT const command_queue_info<CL_QUEUE_PROPERTIES, cl_command_queue_properties>  queue_properties;
+
     enum queue_selector
     {
         default_     = 0,
