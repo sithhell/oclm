@@ -8,6 +8,7 @@
 #define OCLM_PROGRAM_HPP
 
 #include <oclm/config.hpp>
+#include <oclm/info.hpp>
 
 #include <string>
 #include <vector>
@@ -16,6 +17,36 @@
 #include <boost/range.hpp>
 
 namespace oclm {
+
+    template <int Name, typename T>
+    struct program_info
+        : info<
+            ::cl_program
+          , T
+          , ::clGetProgramInfo
+          , Name
+        >
+    {};
+    
+    template <typename>
+    struct is_program_info
+        : boost::mpl::false_
+    {};
+
+    template <int Name, typename T>
+    struct is_program_info<program_info<Name, T> >
+        : boost::mpl::true_
+    {};
+
+    extern OCLM_EXPORT const program_info<CL_PROGRAM_REFERENCE_COUNT, cl_uint>              program_reference_count;
+    extern OCLM_EXPORT const program_info<CL_PROGRAM_CONTEXT, cl_context>                   program_context;
+    extern OCLM_EXPORT const program_info<CL_PROGRAM_NUM_DEVICES, cl_uint>                  program_num_devices;
+    extern OCLM_EXPORT const program_info<CL_PROGRAM_DEVICES, std::vector<cl_device_id>>    program_devices;
+    extern OCLM_EXPORT const program_info<CL_PROGRAM_SOURCE, std::string>                   program_source;
+    extern OCLM_EXPORT const program_info<CL_PROGRAM_BINARY_SIZES, std::vector< ::size_t>>  program_binary_sizes;
+    extern OCLM_EXPORT const program_info<CL_PROGRAM_BINARIES, std::vector< unsigned char*>>    program_binaries;
+    extern OCLM_EXPORT const program_info<CL_PROGRAM_NUM_KERNELS, ::size_t>                 program_num_kernels;
+    extern OCLM_EXPORT const program_info<CL_PROGRAM_KERNEL_NAMES, std::string>             program_kernel_names;
 
     struct program
     {
